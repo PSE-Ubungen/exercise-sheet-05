@@ -1,5 +1,6 @@
 package de.unistuttgart.iste.sqa.pse.sheet05.presence.controlflow;
 
+import de.hamstersimulator.objectsfirst.datatypes.Direction;
 import de.hamstersimulator.objectsfirst.external.simple.game.SimpleHamsterGame;
 
 /**
@@ -50,34 +51,82 @@ public abstract class BaseControlFlowHamsterGame extends SimpleHamsterGame {
 	
 	
 	protected void pickGrainIfAvailable() {
-		// TODO: Please implement according to exercise 1 (c-i)
+		if(paule.grainAvailable()){
+			paule.pickGrain();
+		}
 	}
 
 	protected void pickAllGrains() {
-		// TODO: Please implement according to exercise 1 (c-ii)
+		while (paule.grainAvailable()) {
+			paule.pickGrain();
+		}
 	}
 
 	protected void multiMove(Integer times) {
-		// TODO: Please implement according to exercise 1 (c-iii)
+		for (int index = 0; index < times; index++) {
+			paule.move();
+		}
 	}
 
 	protected void pickGrainOrMove() {
-		// TODO: Please implement according to exercise 1 (c-iv)
+		if (paule.grainAvailable()) {
+			paule.pickGrain();
+		}
+		else{
+			paule.move();
+		}
 	}
 
 	protected void pickAllGrainsOnNonEmptyTile() {
-		// TODO: Please implement according to exercise 1 (c-v)
+		do {
+			paule.pickGrain();
+		} while (paule.grainAvailable());
 	}
 
 	protected void putGrains(Integer amountOfGrains) {
-		// TODO: Please implement according to exercise 2 (a)
+		for (int index = 0; index < amountOfGrains; index++) {
+			paule.putGrain();
+		}
 	}
 
 	protected void emptyMouth() {
-		// TODO: Please implement according to exercise 2 (b)
+		while (!paule.mouthEmpty()) {
+			paule.putGrain();
+		}
 	}
 
 	protected void cleanTerritory() {
-		// TODO: Please implement according to exercise 2 (c)/(d)
+		boolean done = false;
+		while (!done) {
+			while (paule.frontIsClear()) {
+				pickGrainOrMove();
+				if (!paule.frontIsClear() && paule.getDirection() == Direction.EAST) {
+					paule.turnLeft();
+					paule.turnLeft();
+					paule.turnLeft();
+					if (!paule.frontIsClear()) {
+						done = true;
+					}
+					else{
+						pickAllGrains();
+						paule.move();
+						paule.turnLeft();
+						paule.turnLeft();
+						paule.turnLeft();
+					}
+				}
+				else if(!paule.frontIsClear() && paule.getDirection() == Direction.WEST){
+					paule.turnLeft();
+					if (!paule.frontIsClear()) {
+						done = true;
+					}
+					else{
+						pickAllGrains();
+						paule.move();
+						paule.turnLeft();
+					}
+				}
+			}
+		}
 	}
 }
